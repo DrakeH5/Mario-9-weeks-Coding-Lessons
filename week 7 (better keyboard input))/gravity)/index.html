@@ -35,12 +35,14 @@
             var pressedKeys=[1]
 
             document.addEventListener('keydown', function(event) {
-                for(var i=0; i<pressedKeys.length; i++){
-                    if(pressedKeys[i]==event.keyCode){
-                        i=100;
-                    } else if(i==pressedKeys.length-1){
-                        pressedKeys.push(event.keyCode)
+                if(event.keyCode == 87 || event.keyCode == 38){
+                    if(marioLanded==true){
+                        marioLanded="inLimbo"
+                        marioJump(-marioJumpHeight)
+                        drawMario()
                     }
+                } else if(pressedKeys.length<5){
+                    pressedKeys.push(event.keyCode)
                 }
             });     
             document.addEventListener('keyup', function(event) {
@@ -54,19 +56,12 @@
 
             function checkPressedKeys(){
                 for(var i=0; i<pressedKeys.length; i++){
-                    if(pressedKeys[i] == 87 || pressedKeys[i] == 38){
-                        if(marioLanded==true){
-                            marioLanded="inLimbo"
-                            marioJump(-marioJumpHeight)
-                            drawMario()
-                        }
-                    }
                     if(pressedKeys[i] == 68 || pressedKeys[i] == 39){
-                        marioX+=10;
+                        marioX+=3;
                         drawMario()
                     }
                     if(pressedKeys[i] == 65 || pressedKeys[i] == 37){
-                        marioX-=10;
+                        marioX-=3;
                         drawMario()
                     }
                 }
