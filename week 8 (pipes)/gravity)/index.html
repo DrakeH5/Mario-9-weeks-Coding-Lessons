@@ -1,0 +1,120 @@
+<html>
+    <body>
+        <canvas id="canvas"></canvas>
+        <img src="mario.png" id="marioImg" width="0" height="0"></img>
+        <img src="pipe.png" id="pipeImg" width="0" height="0"></img>
+        <style>
+            #canvas {
+                background-color: black;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+        <script src="pipe.js"></script>
+        <script>
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+
+            var groundHeight = 20;
+            var groundYpos = canvas.height-groundHeight;
+            function drawGround(){
+                ctx.fillStyle = "brown";
+                ctx.fillRect(0,groundYpos,canvas.width,groundHeight);
+            }
+
+
+            var marioImg = document.getElementById("marioImg");
+            marioWidth = 30;
+            marioHeight = 30;
+            marioX = 1; 
+            marioY = groundYpos-marioHeight;
+            marioImg.onload = drawMario
+            function drawMario(){
+                ctx.drawImage(marioImg, marioX, marioY, marioWidth, marioHeight);
+            }
+
+
+            var pressedKeys=[1]
+
+            document.addEventListener('keydown', function(event) {
+                if(event.keyCode == 87 || event.keyCode == 38){
+                    if(marioLanded==true){
+                        marioLanded="inLimbo"
+                        marioJump(-marioJumpHeight)
+                        drawMario()
+                    }
+                } else if(pressedKeys.length<5){
+                    pressedKeys.push(event.keyCode)
+                }
+            });     
+            document.addEventListener('keyup', function(event) {
+                for(var i=0; i<pressedKeys.length; i++){
+                    if(pressedKeys[i]==event.keyCode){
+                        pressedKeys.splice(i,1)
+                        i--;
+                    }
+                }
+            });    
+
+            function checkPressedKeys(){
+                for(var i=0; i<pressedKeys.length; i++){
+                    if(pressedKeys[i] == 68 || pressedKeys[i] == 39){
+                        marioX+=3;
+                        drawMario()
+                    }
+                    if(pressedKeys[i] == 65 || pressedKeys[i] == 37){
+                        marioX-=3;
+                        drawMario()
+                    }
+                }
+            }
+
+
+
+            var pipes = [
+                new Pipe(50, groundYpos-50, 50, document.getElementById("pipeImg"))
+            ]
+
+
+            setInterval(function(){
+                canvas.width=canvas.width
+                checkPressedKeys()
+                gravity()
+                drawMario()
+                drawGround()
+                for(var i=0; i<pipes.length; i++){
+                    pipes[i].update()
+                }
+            }, 50)
+
+
+            marioLanded=true;
+            marioJumpHeight=10;
+
+            gravitySpeed=500
+            function gravity(){
+                setInterval(function(){
+                    if(marioLanded==false){
+                        marioY++;
+                        gravitySpeed-=10
+                        if(marioY+marioHeight>=groundYpos){
+                            marioLanded=true
+                            gravitySpeed=500
+                        }
+                    }
+                },gravitySpeed)
+            }
+            function marioJump(time){
+                setInterval(function(){
+                    if(time<0){
+                        marioY-=Math.sqrt(marioJumpHeight*marioJumpHeight-time*time)
+                        time++;
+                    } else if(time==10){} else {
+                        marioLanded=false;
+                        time = 10
+                    }
+                },75)
+            }
+        </script>
+    </body>
+</html>
