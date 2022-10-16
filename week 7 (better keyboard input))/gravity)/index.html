@@ -74,22 +74,21 @@
                 gravity()
                 drawMario()
                 drawGround()
-            }, 100)
+            }, 50)
 
 
             marioLanded=true;
             marioJumpHeight=10;
 
-            gravitySpeed=1000
+            gravitySpeed=500
             function gravity(){
                 setInterval(function(){
                     if(marioLanded==false){
                         marioY++;
                         gravitySpeed-=10
                         if(marioY+marioHeight>=groundYpos){
-                            marioY=groundYpos-marioHeight
                             marioLanded=true
-                            gravitySpeed=1000
+                            gravitySpeed=500
                         }
                     }
                 },gravitySpeed)
@@ -103,7 +102,7 @@
                         marioLanded=false;
                         time = 10
                     }
-                },100)
+                },75)
             }
         </script>
     </body>
